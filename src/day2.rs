@@ -182,7 +182,7 @@ impl Round {
 }
 
 pub fn run() {
-  let data = read_file("data/day2.txt");
+  let data = read_file("data/day02.txt");
   part1(&data);
   part2(&data);
 }

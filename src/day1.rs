@@ -3,7 +3,7 @@ use std::cmp::Ordering;
 use crate::util;
 
 pub fn run() {
-  let data = parse(&util::read_file("data/day1.txt"));
+  let data = parse(&util::read_file("data/day01.txt"));
   part_1(&data);
   part_2(&data);
 }
