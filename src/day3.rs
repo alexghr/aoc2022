@@ -3,6 +3,7 @@ use crate::util::read_file;
 pub fn run() {
   let data = read_file("data/day03.txt");
   part1(&data);
+  part2(&data);
 }
 
 fn part1(data: &Vec<String>) {
@@ -15,7 +16,24 @@ fn part1(data: &Vec<String>) {
       .fold(0, |s, x| s + priority(&x))
   });
 
-  println!("Total cost: {}", total)
+  println!("Total cost of duplicate items: {}", total)
+}
+
+fn part2(data: &Vec<String>) {
+  let sum = data.into_iter().step_by(3)
+    .zip(data.into_iter().skip(1).step_by(3))
+    .zip(data.into_iter().skip(2).step_by(3))
+    .map(|((a, b), c)| (a,b,c))
+    .fold(0, |s, (a, b, c)| {
+      s + priority(
+        &all_items()
+          .into_iter()
+          .find(|&x| a.contains(x) && b.contains(x) && c.contains(x))
+          .unwrap()
+        )
+    });
+
+  println!("Total cost of badges: {}", sum);
 }
 
 fn compartmentalize(items: &[char]) -> (&[char], &[char]) {
