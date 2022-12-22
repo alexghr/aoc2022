@@ -5,6 +5,7 @@ use crate::util::{read_file, ParseAoCError};
 pub fn run() {
   let data = read_file("data/day04.txt");
   part1(&data);
+  part2(&data);
 }
 
 struct SectionRange {
@@ -31,6 +32,11 @@ impl SectionRange {
   pub fn is_contained_by(&self, other: &SectionRange) -> bool {
     self.start >= other.start && self.end <= other.end
   }
+
+  pub fn is_partially_overlapping(&self, other: &SectionRange) -> bool {
+    (self.start >= other.start && self.start <= other.end)
+    || (self.end >= other.start && self.end <= other.end)
+  }
 }
 
 struct Pair {
@@ -54,15 +60,27 @@ impl FromStr for Pair {
 }
 
 impl Pair {
-  pub fn overlaps(&self) -> bool {
+  pub fn fully_overlaps(&self) -> bool {
     self.first.is_contained_by(&self.second) ||
     self.second.is_contained_by(&self.first)
+  }
+
+  pub fn overlaps(&self) -> bool {
+    self.first.is_partially_overlapping(&self.second) ||
+    self.second.is_partially_overlapping(&self.first)
   }
 }
 
 fn part1(data: &Vec<String>) {
   let parsed: Vec<Pair> = data.into_iter().map(|x| x.parse().unwrap()).collect();
-  let count = parsed.into_iter().filter(|x| x.overlaps()).count();
+  let count = parsed.into_iter().filter(|x| x.fully_overlaps()).count();
 
   println!("Number of fully overlapping pairs is: {}", count);
+}
+
+fn part2(data: &Vec<String>) {
+  let parsed: Vec<Pair> = data.into_iter().map(|x| x.parse().unwrap()).collect();
+  let count = parsed.into_iter().filter(|x| x.overlaps()).count();
+
+  println!("Number of partially overlapping pairs is: {}", count);
 }
